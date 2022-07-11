@@ -1,26 +1,26 @@
-import axios from "axios";
 import React from "react";
-import Moment from "react-moment";
 import { useNavigate } from "react-router-dom";
+import Moment from "react-moment";
 import { toast } from "react-toastify";
 import "moment/locale/vi";
-import { StarRating } from "../../Components/StarRating/Index";
 import { useMyContext } from "../../Contexts/GlobalState";
-const RestaurantList = () => {
-  const { restaurants, setReload, reload } = useMyContext();
+import { StarRating } from "../../Components/StarRating/Index";
+import axios from "axios";
+const RestaurantFlag = () => {
+  const { restaurantsFlag, setReload, reload } = useMyContext();
   let navigate = useNavigate();
-  const handleDelete = async (e, id) => {
+  const handleUndo = async (e, id) => {
     e.stopPropagation();
-    if (window.confirm("Are you want delete Restaurants ?")) {
+    if (window.confirm(` Are you want Undo ${id} Restaurants ? `)) {
       e.stopPropagation();
       try {
         await axios
-          .post("/api/delete", {
+          .post("/api/undo", {
             id,
           })
           .then((item) => {
             setReload(!reload);
-            return toast.success("Delete Success 😉!");
+            return toast.success("Undo Success 😉!");
           })
           .catch((error) => {
             return toast.error("Server busy 🥲 !");
@@ -31,15 +31,10 @@ const RestaurantList = () => {
     }
   };
 
-  const handleUpdate = (e, id) => {
+  const RollBack = (e) => {
     e.stopPropagation();
-    navigate(`/restaurants/${id}/update`);
+    navigate("/");
   };
-
-  const handleRestaurantSelect = (id) => {
-    navigate(`/restaurants/${id}`);
-  };
-
   const renderRating = (restaurant) => {
     if (!restaurant.count) {
       return <span className="text-warning">0 reviews</span>;
@@ -53,8 +48,8 @@ const RestaurantList = () => {
   };
   return (
     <>
-      <button className="btn btn-danger" onClick={() => navigate("/undo")}>
-        Page Delete
+      <button className="btn btn-warning" onClick={RollBack}>
+        Roll Back
       </button>
       <div className="list-group">
         <table className="table table-hover table-dark">
@@ -67,18 +62,14 @@ const RestaurantList = () => {
               <th scope="col">Date Create</th>
               <th scope="col">Date Edit</th>
               <th scope="col">Date Delete</th>
-              <th scope="col">Edit</th>
-              <th scope="col">Delete</th>
+              <th scope="col">Undo</th>
             </tr>
           </thead>
           <tbody>
-            {restaurants &&
-              restaurants.map((restaurant) => {
+            {restaurantsFlag &&
+              restaurantsFlag.map((restaurant) => {
                 return (
-                  <tr
-                    onClick={() => handleRestaurantSelect(restaurant.id)}
-                    key={restaurant.id}
-                  >
+                  <tr key={restaurant.id}>
                     <td>{restaurant.name}</td>
                     <td>{restaurant.location}</td>
                     <td>{"$".repeat(restaurant.price_range)}</td>
@@ -110,18 +101,10 @@ const RestaurantList = () => {
 
                     <td>
                       <button
-                        onClick={(e) => handleUpdate(e, restaurant.id)}
+                        onClick={(e) => handleUndo(e, restaurant.id)}
                         className="btn btn-warning"
                       >
-                        Update
-                      </button>
-                    </td>
-                    <td>
-                      <button
-                        onClick={(e) => handleDelete(e, restaurant.id)}
-                        className="btn btn-danger"
-                      >
-                        Delete
+                        Undo
                       </button>
                     </td>
                   </tr>
@@ -134,4 +117,4 @@ const RestaurantList = () => {
   );
 };
 
-export default RestaurantList;
+export default RestaurantFlag;

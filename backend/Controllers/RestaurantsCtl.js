@@ -15,9 +15,35 @@ const RestaurantCtrl = {
         });
       }
       const restaurantRatingsData = await pool.query(
-        "select * from restaurants"
+        "select * from restaurants where delete_flag=false; "
       );
       await set("restaurants", JSON.stringify(restaurantRatingsData.rows));
+      return res.json({
+        status: 200,
+        success: true,
+        data: restaurantRatingsData.rows,
+      });
+    } catch (error) {
+      res.status(503).json({
+        status: 503,
+        msg: "Server Is Busy",
+      });
+    }
+  },
+  GetRestaurantDelete: async (req, res) => {
+    try {
+      var DataCache = await get("flagRestaurants");
+      if (DataCache) {
+        return res.json({
+          status: 200,
+          success: true,
+          data: JSON.parse(DataCache),
+        });
+      }
+      const restaurantRatingsData = await pool.query(
+        "select * from restaurants where delete_flag=true; "
+      );
+      await set("flagRestaurants", JSON.stringify(restaurantRatingsData.rows));
       return res.json({
         status: 200,
         success: true,
@@ -127,39 +153,51 @@ const RestaurantCtrl = {
   },
   DeleteRestaurant: async (req, res) => {
     try {
-      const { name, location, price_range, create_at_date_time } = req.body;
-      let delete_flag_date_time = `${format(
-        new Date(),
-        "dd-MM-yyyy HH:mm:ss"
-      )}`;
-      let delete_flag = CONTAINS.DELETED_ENABLE;
-      await pool
-        .query(
-          "UPDATE restaurants SET name = $1, location = $2, price_range = $3, create_at_date_time = $4, delete_flag = $5 ,delete_flag_date_time = $6 where id = $7 returning *",
-          [
-            name,
-            location,
-            price_range,
-            create_at_date_time,
-            delete_flag,
-            delete_flag_date_time,
-            req.params.id,
-          ]
-        )
-        .then(async (item) => {
-          await del(req.params.id);
-          await del("restaurants");
-          return res.status(200).json({
-            status: 200,
-            msg: "Success",
+      const { id } = req.body;
+      const restaurantRatingsData = await pool.query(
+        "select * from restaurants where delete_flag = false AND id = $1",
+        [id]
+      );
+      if (restaurantRatingsData) {
+        let name = restaurantRatingsData.rows[0].name;
+        let location = restaurantRatingsData.rows[0].location;
+        let price_range = restaurantRatingsData.rows[0].price_range;
+        let create_at_date_time =
+          restaurantRatingsData.rows[0].create_at_date_time;
+        let delete_flag_date_time = `${format(
+          new Date(),
+          "dd-MM-yyyy HH:mm:ss"
+        )}`;
+        let delete_flag = CONTAINS.DELETED_ENABLE;
+        await pool
+          .query(
+            "UPDATE restaurants SET name = $1, location = $2, price_range = $3, create_at_date_time = $4, delete_flag = $5 ,delete_flag_date_time = $6 where id = $7 returning *",
+            [
+              name,
+              location,
+              price_range,
+              create_at_date_time,
+              delete_flag,
+              delete_flag_date_time,
+              id,
+            ]
+          )
+          .then(async (item) => {
+            await del(req.params.id);
+            await del("restaurants");
+            await del("flagRestaurants");
+            return res.status(200).json({
+              status: 200,
+              msg: "Success",
+            });
+          })
+          .catch((err) => {
+            return res.status(503).json({
+              status: 503,
+              msg: "Server Is Busy",
+            });
           });
-        })
-        .catch((err) => {
-          return res.status(503).json({
-            status: 503,
-            msg: "Server Is Busy",
-          });
-        });
+      }
     } catch (err) {
       return res.status(503).json({
         status: 503,
@@ -169,36 +207,51 @@ const RestaurantCtrl = {
   },
   UndoRestaurant: async (req, res) => {
     try {
-      const { name, location, price_range, create_at_date_time } = req.body;
-      let delete_flag_date_time = null;
-      let delete_flag = CONTAINS.DELETED_DISABLE;
-      await pool
-        .query(
-          "UPDATE restaurants SET name = $1, location = $2, price_range = $3, create_at_date_time = $4, delete_flag = $5 ,delete_flag_date_time = $6 where id = $7 returning *",
-          [
-            name,
-            location,
-            price_range,
-            create_at_date_time,
-            delete_flag,
-            delete_flag_date_time,
-            req.params.id,
-          ]
-        )
-        .then(async (item) => {
-          await del(req.params.id);
-          await del("restaurants");
-          return res.status(200).json({
-            status: 200,
-            msg: "Success",
+      const { id } = req.body;
+      const restaurantRatingsData = await pool.query(
+        "select * from restaurants where delete_flag = true AND id = $1",
+        [id]
+      );
+      if (restaurantRatingsData) {
+        let name = restaurantRatingsData.rows[0].name;
+        let location = restaurantRatingsData.rows[0].location;
+        let price_range = restaurantRatingsData.rows[0].price_range;
+        let create_at_date_time =
+          restaurantRatingsData.rows[0].create_at_date_time;
+        let delete_flag_date_time = `${format(
+          new Date(),
+          "dd-MM-yyyy HH:mm:ss"
+        )}`;
+        let delete_flag = CONTAINS.DELETED_DISABLE;
+        await pool
+          .query(
+            "UPDATE restaurants SET name = $1, location = $2, price_range = $3, create_at_date_time = $4, delete_flag = $5 ,delete_flag_date_time = $6 where id = $7 returning *",
+            [
+              name,
+              location,
+              price_range,
+              create_at_date_time,
+              delete_flag,
+              delete_flag_date_time,
+              id,
+            ]
+          )
+          .then(async (item) => {
+            await del(req.params.id);
+            await del("restaurants");
+            await del("flagRestaurants");
+            return res.status(200).json({
+              status: 200,
+              msg: "Success",
+            });
+          })
+          .catch((err) => {
+            return res.status(503).json({
+              status: 503,
+              msg: "Server Is Busy",
+            });
           });
-        })
-        .catch((err) => {
-          return res.status(503).json({
-            status: 503,
-            msg: "Server Is Busy",
-          });
-        });
+      }
     } catch (err) {
       return res.status(503).json({
         status: 503,
