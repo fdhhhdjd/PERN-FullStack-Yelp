@@ -36,13 +36,13 @@ const RestaurantFlag = () => {
     navigate("/");
   };
   const renderRating = (restaurant) => {
-    if (!restaurant.count) {
+    if (!restaurant.price_range) {
       return <span className="text-warning">0 reviews</span>;
     }
     return (
       <>
-        <StarRating rating={restaurant.id} />
-        <span className="text-warning ml-1">({restaurant.count})</span>
+        <StarRating rating={restaurant.price_range} />
+        <span className="text-warning ml-1">({restaurant.price_range})</span>
       </>
     );
   };

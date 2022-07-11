@@ -15,7 +15,7 @@ const RestaurantCtrl = {
         });
       }
       const restaurantRatingsData = await pool.query(
-        "select * from restaurants where delete_flag=false; "
+        "select * from restaurants  where delete_flag = false order by price_range DESC;"
       );
       await set("restaurants", JSON.stringify(restaurantRatingsData.rows));
       return res.json({
@@ -41,7 +41,7 @@ const RestaurantCtrl = {
         });
       }
       const restaurantRatingsData = await pool.query(
-        "select * from restaurants where delete_flag=true; "
+        "select * from restaurants  where delete_flag = true order by price_range DESC;"
       );
       await set("flagRestaurants", JSON.stringify(restaurantRatingsData.rows));
       return res.json({
@@ -212,6 +212,7 @@ const RestaurantCtrl = {
         "select * from restaurants where delete_flag = true AND id = $1",
         [id]
       );
+
       if (restaurantRatingsData) {
         let name = restaurantRatingsData.rows[0].name;
         let location = restaurantRatingsData.rows[0].location;

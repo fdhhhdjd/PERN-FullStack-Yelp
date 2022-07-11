@@ -36,18 +36,14 @@ const RestaurantList = () => {
     navigate(`/restaurants/${id}/update`);
   };
 
-  const handleRestaurantSelect = (id) => {
-    navigate(`/restaurants/${id}`);
-  };
-
   const renderRating = (restaurant) => {
-    if (!restaurant.count) {
+    if (!restaurant.price_range) {
       return <span className="text-warning">0 reviews</span>;
     }
     return (
       <>
-        <StarRating rating={restaurant.id} />
-        <span className="text-warning ml-1">({restaurant.count})</span>
+        <StarRating rating={restaurant.price_range} />
+        <span className="text-warning ml-1">({restaurant.price_range})</span>
       </>
     );
   };
@@ -75,10 +71,7 @@ const RestaurantList = () => {
             {restaurants &&
               restaurants.map((restaurant) => {
                 return (
-                  <tr
-                    onClick={() => handleRestaurantSelect(restaurant.id)}
-                    key={restaurant.id}
-                  >
+                  <tr key={restaurant.id}>
                     <td>{restaurant.name}</td>
                     <td>{restaurant.location}</td>
                     <td>{"$".repeat(restaurant.price_range)}</td>
