@@ -3,12 +3,25 @@
     {
       "src": "backend/server.js",
       "use": "@now/node"
+    },
+    {
+      "src": "frontend/build/**",
+      "use": "@vercel/static",
+      "config": { "includeFiles": ["frontend/build/**"] }
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
       "dest": "backend/server.js"
+    },
+    {
+      "src": "/",
+      "dest": "frontend/build/index.html"
+    },
+    {
+      "src": "/(.+)",
+      "dest": "frontend/build/$1"
     }
   ]
 }
