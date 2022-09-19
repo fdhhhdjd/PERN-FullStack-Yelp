@@ -1,5 +1,5 @@
 "use strict";
-const REDIS = require("../configs/RedisIo");
+const REDIS = require("../Configs/RedisIo.js");
 const get = async (key) => {
   return new Promise((resolve, reject) => {
     REDIS.get(key, (err, result) => {

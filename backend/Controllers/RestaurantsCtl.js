@@ -17,6 +17,7 @@ const RestaurantCtrl = {
       const restaurantRatingsData = await pool.query(
         "select * from restaurants  where delete_flag = false order by price_range DESC;"
       );
+      console.log(restaurantRatingsData.rows);
       await set("restaurants", JSON.stringify(restaurantRatingsData.rows));
       return res.json({
         status: 200,
@@ -87,7 +88,7 @@ const RestaurantCtrl = {
     try {
       const { name, location, price_range } = req.body;
       let delete_flag = CONTAINS.DELETED_DISABLE;
-      let create_at_date_time = `${format(new Date(), "dd-MM-yyyy HH:mm:ss")}`;
+      let create_at_date_time = `${format(new Date(), "yyyy-MM-dd HH:mm:ss")}`;
       await pool
         .query(
           "INSERT INTO restaurants (name, location, price_range, delete_flag,create_at_date_time) values ($1, $2, $3,$4,$5) returning *",
@@ -104,20 +105,20 @@ const RestaurantCtrl = {
         .catch((error) => {
           return res.status(503).json({
             status: 503,
-            msg: "Server Is Busy",
+            msg: error,
           });
         });
     } catch (e) {
       return res.status(503).json({
         status: 503,
-        msg: "Server Is Busy",
+        msg: e,
       });
     }
   },
   EditRestaurant: async (req, res) => {
     try {
       const { name, location, price_range, create_at_date_time } = req.body;
-      let update_date_time = `${format(new Date(), "dd-MM-yyyy HH:mm:ss")}`;
+      let update_date_time = `${format(new Date(), "yyyy-MM-dd HH:mm:ss")}`;
       await pool
         .query(
           "UPDATE restaurants SET name = $1, location = $2, price_range = $3, create_at_date_time = $4, update_date_time = $5 where id = $6 returning *",
@@ -166,7 +167,7 @@ const RestaurantCtrl = {
           restaurantRatingsData.rows[0].create_at_date_time;
         let delete_flag_date_time = `${format(
           new Date(),
-          "dd-MM-yyyy HH:mm:ss"
+          "yyyy-MM-dd HH:mm:ss"
         )}`;
         let delete_flag = CONTAINS.DELETED_ENABLE;
         await pool
@@ -221,7 +222,7 @@ const RestaurantCtrl = {
           restaurantRatingsData.rows[0].create_at_date_time;
         let delete_flag_date_time = `${format(
           new Date(),
-          "dd-MM-yyyy HH:mm:ss"
+          "yyyy-MM-dd HH:mm:ss"
         )}`;
         let delete_flag = CONTAINS.DELETED_DISABLE;
         await pool
