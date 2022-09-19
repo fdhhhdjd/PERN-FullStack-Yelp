@@ -41,9 +41,17 @@ const restaurant = require("./Routes/RestaurantsRoute");
 
 //!Link router Main
 app.use("/api", restaurant);
-app.use(express.static(path.join(__dirname, "./frontend", "build")));
-app.get("/*", (req, res) => {
-  res.sendFile(path.join(__dirname, "./frontend", "build", "index.html"));
+app.use(express.static(path.join(__dirname, "./frontend/build")));
+
+app.get("*", function (_, res) {
+  res.sendFile(
+    path.join(__dirname, "./frontend/build/index.html"),
+    function (err) {
+      if (err) {
+        res.status(500).send(err);
+      }
+    }
+  );
 });
 
 module.exports = app;
