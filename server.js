@@ -1,5 +1,5 @@
 const dotenv = require("dotenv");
-const app = require("./");
+const app = require("./app");
 dotenv.config({ path: ".env" });
 require("./Configs/Postgres.js");
 
