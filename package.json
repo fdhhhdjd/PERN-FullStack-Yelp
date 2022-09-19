@@ -7,9 +7,8 @@
     "node": "14.x"
   },
   "scripts": {
-    "start": "node backend/server.js",
-    "client": "cd frontend && npm run start",
-    "dev": "nodemon backend/server.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
   "keywords": [],
   "author": "",
