@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "moment/locale/vi";
 import { StarRating } from "../../Components/StarRating/Index";
-import { useMyContext } from "../../Contexts/GlobalState";
+import { API, useMyContext } from "../../Contexts/GlobalState";
 const RestaurantList = () => {
   const { restaurants, setReload, reload } = useMyContext();
   let navigate = useNavigate();
@@ -15,7 +15,7 @@ const RestaurantList = () => {
       e.stopPropagation();
       try {
         await axios
-          .post("/api/delete", {
+          .post(`${API}/api/delete`, {
             id,
           })
           .then((item) => {

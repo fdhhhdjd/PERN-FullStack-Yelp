@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
+export const API = "https://pern-full-stack-yelp.vercel.app";
 export const Store = createContext();
 export const useMyContext = () => useContext(Store);
 export const GlobalState = createContext();
@@ -13,7 +14,7 @@ export const DataProvider = ({ children }) => {
     const fetchData = async () => {
       try {
         await axios
-          .get("/api/getall")
+          .get(`${API}/api/getall`)
           .then((response) => {
             setRestaurants(response.data.data);
           })
@@ -31,7 +32,7 @@ export const DataProvider = ({ children }) => {
     const fetchData = async () => {
       try {
         await axios
-          .get("/api/getdelete")
+          .get(`${API}/api/getdelete`)
           .then((response) => {
             setRestaurantsFlag(response.data.data);
           })

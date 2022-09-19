@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Moment from "react-moment";
 import { toast } from "react-toastify";
 import "moment/locale/vi";
-import { useMyContext } from "../../Contexts/GlobalState";
+import { API, useMyContext } from "../../Contexts/GlobalState";
 import { StarRating } from "../../Components/StarRating/Index";
 import axios from "axios";
 const RestaurantFlag = () => {
@@ -15,7 +15,7 @@ const RestaurantFlag = () => {
       e.stopPropagation();
       try {
         await axios
-          .post("/api/undo", {
+          .post(`${API}/api/undo`, {
             id,
           })
           .then((item) => {
