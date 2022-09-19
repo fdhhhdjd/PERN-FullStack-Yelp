@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node backend/server.js",
+    "start": "node server.js",
     "client": "cd frontend && npm run start",
-    "dev": "nodemon backend/server.js"
+    "dev": "nodemon server.js"
   },
   "keywords": [],
   "author": "",

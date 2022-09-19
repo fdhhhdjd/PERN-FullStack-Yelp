@@ -3,6 +3,7 @@ const responseTime = require("response-time");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const path = require("path");
 const bodyParser = require("body-parser");
 const compression = require("compression");
 const morgan = require("morgan");
@@ -40,5 +41,10 @@ const restaurant = require("./Routes/RestaurantsRoute");
 
 //!Link router Main
 app.use("/api", restaurant);
+app.use(express.static(path.join(__dirname, "../frontend/build")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "../frontend/build/index.html"));
+});
 
 module.exports = app;
