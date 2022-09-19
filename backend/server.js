@@ -13,7 +13,17 @@ app.get("/", (req, res) => {
   };
   return res.send(healthcheck);
 });
-
+app.use(express.static(path.join(__dirname, "./frontend/build")));
+app.get("*", function (_, res) {
+  res.sendFile(
+    path.join(__dirname, "./frontend/build/index.html"),
+    function (err) {
+      if (err) {
+        res.status(500).send(err);
+      }
+    }
+  );
+});
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () =>
   console.log(`server is listening on port:http://localhost:${PORT}`)
