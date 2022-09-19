@@ -1,8 +1,8 @@
 const { format } = require("date-fns");
 const pool = require("../Configs/Postgres");
-const { set, get, del } = require("../Utils/Limited");
+const { set, get, del } = require("../Utils/Limited.js");
 const CONTAINS = require("../Configs/contains");
-const RedisCtrl = require("../Controllers/DeleteCache");
+const RedisCtrl = require("./DeleteCache");
 const RestaurantCtrl = {
   GetRestaurant: async (req, res) => {
     try {
