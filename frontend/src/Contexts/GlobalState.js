@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
-export const API = "https://pern-full-stack-yelp.vercel.app";
+export const API = "https://yelppostgres.cf";
 export const Store = createContext();
 export const useMyContext = () => useContext(Store);
 export const GlobalState = createContext();
