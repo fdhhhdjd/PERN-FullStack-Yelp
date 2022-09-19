@@ -1,4 +1,4 @@
-const { del } = require("../utils/Limited.js");
+const { del } = require("../Utils/Limited.js");
 const RedisCtrl = {
   deleteCacheRedis: async (req, res) => {
     try {
