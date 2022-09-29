@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
-export const API = "https://yelppostgres.ml";
+export const API = process.env.REACT_APP_API_URL;
 export const Store = createContext();
 export const useMyContext = () => useContext(Store);
 export const GlobalState = createContext();
