@@ -15,6 +15,14 @@ app.use((req, res, next) => {
 });
 app.use(responseTime());
 app.enable("trust proxy");
+app.get("/api/", (req, res) => {
+  const health_check = {
+    uptime: process.uptime(),
+    message: "Tài Đẹp trai ",
+    timestamp: Date.now(),
+  };
+  return res.send(health_check);
+});
 app.use(
   compression({
     level: 6,
